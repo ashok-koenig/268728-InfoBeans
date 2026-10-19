@@ -1,5 +1,7 @@
 package pillars;
 
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
         // 1. Class and object
@@ -17,6 +19,14 @@ public class Main {
         } catch (IllegalArgumentException e) {
             System.out.println("Rejected: " + e.getMessage());
         }
-
+        // Inheritance & Polymorphism
+        List<Product> catalog = List.of(
+                new PhysicalProduct("Laptop", 65000, 5, 1.5),
+                new DigitalProduct("Java E-Book", 500),
+                new Product("Gift Card", 1000, 100)
+        );
+        for (Product p: catalog){
+            System.out.println(p.deliveryInfo() + " : discount Rs. "+ p.discount());
+        }
     }
 }
