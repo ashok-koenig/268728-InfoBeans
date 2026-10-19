@@ -11,6 +11,7 @@ public class Product {
         this.stock = stock;
     }
 
+
     public String getName() {
         return name;
     }
@@ -31,5 +32,12 @@ public class Product {
             throw new IllegalArgumentException("Only "+ stock + " left in stock");
         }
         stock -= qty;
+    }
+
+    public String deliveryInfo(){
+        return name + ": standard delivery";
+    }
+    public double discount(){
+        return 0;
     }
 }
