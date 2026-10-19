@@ -28,5 +28,14 @@ public class Main {
         for (Product p: catalog){
             System.out.println(p.deliveryInfo() + " : discount Rs. "+ p.discount());
         }
+
+        // 5. Abstraction: the caller only knows PaymentMethod
+        List<PaymentMethod> options = List.of(
+                new CardPayment("4111111111111234"),
+                new UpiPayment("asha@upi"));
+        for (PaymentMethod method : options) {
+            method.pay(499);
+        }
+
     }
 }
