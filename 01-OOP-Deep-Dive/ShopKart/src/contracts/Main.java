@@ -19,5 +19,8 @@ public class Main {
         System.out.println("Laptop tax: Rs." + laptop.taxOn(laptop.getPrice()));
         System.out.println("EBook tax: Rs." + book.taxOn(book.getPrice()));
 
+        // default + static + private methods on an interface
+        Notifier notifier = Notifier.of("Asha");
+        System.out.println(notifier.confirmation("ORD-1001"));
     }
 }
