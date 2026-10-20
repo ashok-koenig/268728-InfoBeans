@@ -32,5 +32,16 @@ public class Main {
         }
 
         System.out.println("Customers: "+ byCustomer.size());
+
+        // Stock map: put replaces, merge adds, getOrDefault avoids null
+
+        Map<String, Integer> stock = SampleData.stock();
+        System.out.println("Stock: "+ stock);
+        stock.put("Keyboard", null);
+        stock.merge("Pen", 50, Integer::sum); // restock
+        stock.merge("Keyboard", 20, Integer::sum); // new product
+        System.out.println("Updated Stock: "+ stock);
+        System.out.println("Pen Stock: "+ stock.get("Pen"));
+        System.out.println("Cups Stock: "+ stock.getOrDefault("Cups", 0));
     }
 }
