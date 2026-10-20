@@ -3,12 +3,11 @@ package safety;
 import model.Item;
 import model.SampleData;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         List<Item> cart = new ArrayList<>(
                 List.of(
                         new Item(SampleData.LAPTOP, 1),
@@ -27,5 +26,20 @@ public class Main {
         System.out.println("Cart count: "+ cart.size());
         System.out.println("View count: "+ view.size());
         System.out.println("Receipt count: "+ receipt.size());
+
+//        Map<String, Integer> sales = new HashMap<>();
+        Map<String, Integer> sales = new ConcurrentHashMap<>();
+        Runnable counter = () -> {
+            for (int i=0; i<1000; i++){
+                sales.merge("Laptop", 1, Integer::sum);
+            }
+        };
+        Thread a = new Thread(counter);
+        Thread b = new Thread(counter);
+        a.start();
+        b.start();
+        a.join();
+        b.join();
+        System.out.println("Laptop sold: "+ sales.get("Laptop"));
     }
 }
