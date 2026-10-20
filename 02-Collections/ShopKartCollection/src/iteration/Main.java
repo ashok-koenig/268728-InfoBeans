@@ -53,6 +53,7 @@ public class Main {
             }
         }
         System.out.println("Fix 1 left: "+ fix1.size());
+        System.out.println("Fix 1 left: "+ fix1);
 
         // Fix 2: removeIf
         List<Product> fix2 = new ArrayList<>(products);
