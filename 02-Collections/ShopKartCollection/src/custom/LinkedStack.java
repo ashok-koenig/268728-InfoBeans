@@ -1,8 +1,10 @@
 package custom;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LinkedStack<T> {
+public class LinkedStack<T> implements Iterable<T>{
+
     private static class Node<T> {
         final T value;
         final Node<T> next;
@@ -33,5 +35,34 @@ public class LinkedStack<T> {
             throw new NoSuchElementException("stack is empty");
         }
         return top.value;
+    }
+
+    public boolean isEmpty(){
+        return size ==0;
+    }
+
+    public int size(){
+        return size;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            private Node<T> current = top;
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next() {
+                if(current == null){
+                    throw new NoSuchElementException();
+                }
+                T value = current.value;
+                current = current.next;
+                return value;
+            }
+        };
     }
 }
