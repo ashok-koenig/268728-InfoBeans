@@ -44,5 +44,7 @@ public class Main {
                 .toList();
         System.out.println("Top 3 products: "+ top3);
 
+        long units = allItems.stream().filter(i -> i.qty() >1).mapToInt(Item::qty).sum();
+        System.out.println("Total units orders: "+ units);
     }
 }
