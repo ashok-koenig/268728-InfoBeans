@@ -8,12 +8,14 @@ package functional;
 //    }
 //}
 
-import model.Category;
-import model.Product;
-import model.SampleData;
+import model.*;
 
+import java.io.PrintStream;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class Main {
     public static void main(String[] args) {
@@ -35,5 +37,15 @@ public class Main {
         // Function
         Function<Product, String> label = product -> product.name() + " (" + product.price() + ")";
         System.out.println(label.apply(laptop));
+        System.out.println("Label Length: "+ label.andThen(String::length).apply(laptop));
+
+        // Consumer
+        Consumer<Product> priter = p -> System.out.println("Product: "+ p.name());
+        SampleData.products().forEach(priter);
+
+        // Supplier
+        Customer guest = new Customer(0, "Guest", new Address("Indore", "432101"));
+        Supplier<Order> emptryOrder = () -> new Order("0-0", guest, "North", List.of(), null);
+        System.out.println("Default order: "+ emptryOrder.get());
     }
 }
