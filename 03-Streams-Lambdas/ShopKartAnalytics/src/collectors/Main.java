@@ -30,5 +30,18 @@ public class Main {
         Map<String, List<String>> idsByRegion = orders.stream().collect(Collectors.groupingBy(Order::region, TreeMap::new,
                 Collectors.mapping(Order::id, Collectors.toList())));
         System.out.println("Order ids by region: "+ idsByRegion);
+
+        Map<String, Long> ordersPerRegion = orders.stream().collect(Collectors.groupingBy(Order::region, TreeMap::new,
+                Collectors.counting()));
+        System.out.println("Order per region: "+ ordersPerRegion);
+
+        Map<String, Double> revenuePerRegion = orders.stream().collect(Collectors.groupingBy(Order::region, TreeMap::new,
+                Collectors.summingDouble(Order::totalAmount)));
+        System.out.println("Revenue per region: "+ revenuePerRegion);
+
+        // partitioningBy: Big orders vs Small (10000)
+        Map<Boolean, Long> bigOrSmall = orders.stream()
+                .collect(Collectors.partitioningBy(o-> o.totalAmount() >=10000, Collectors.counting()));
+        System.out.println("Big orders vs small: "+ bigOrSmall);
     }
 }
