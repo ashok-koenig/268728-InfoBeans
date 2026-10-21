@@ -12,10 +12,7 @@ import model.*;
 
 import java.io.PrintStream;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -47,5 +44,9 @@ public class Main {
         Customer guest = new Customer(0, "Guest", new Address("Indore", "432101"));
         Supplier<Order> emptryOrder = () -> new Order("0-0", guest, "North", List.of(), null);
         System.out.println("Default order: "+ emptryOrder.get());
+
+        // BiFunction
+        BiFunction<Product, Integer, Money> lineTotal = (p, qty) -> p.price().times(qty);
+        System.out.println("3 chairs price: "+ lineTotal.apply(chair, 3));
     }
 }
