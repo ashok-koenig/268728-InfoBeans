@@ -27,5 +27,23 @@ public class Main {
         System.out.println("By price: "+ products.stream().map(Product::name).toList());
         products.sort(byNameLength);
         System.out.println("By name length: " + products.stream().map(Product::name).toList());
+
+        // Method references replace labbdas that only call one method
+        List<String> numbers = List.of("10", "20", "30");
+        int sum = numbers.stream().map(Integer::parseInt).mapToInt(Integer::intValue).sum();
+        System.out.println("Sum: "+ sum);
+//        Supplier<List<String>> newList = () -> new ArrayList<>();
+        Supplier<List<String>> newList = ArrayList::new;
+        System.out.println("New list size: " + newList.get().size());
+
+        // Closure issue with Lambda
+//        int total = 0;
+//        products.forEach( p -> total += 1);
+        double totalSold = SampleData.orders().stream()
+                .flatMap(o->o.items().stream())
+                .mapToDouble(i -> i.subtotal().asDouble())
+                .sum();
+        System.out.println("Total sold: "+ totalSold);
+
     }
 }
