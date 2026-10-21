@@ -3,6 +3,7 @@ package collectors;
 import model.Order;
 import model.SampleData;
 
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -43,5 +44,18 @@ public class Main {
         Map<Boolean, Long> bigOrSmall = orders.stream()
                 .collect(Collectors.partitioningBy(o-> o.totalAmount() >=10000, Collectors.counting()));
         System.out.println("Big orders vs small: "+ bigOrSmall);
+
+        // summarizing: count, min, max, average
+        DoubleSummaryStatistics stats = orders.stream().collect(Collectors.summarizingDouble(Order::totalAmount));
+        System.out.println("Order total amount statistics: "+ stats);
+        System.out.println("Order total max: "+ stats.getMax());
+
+        // teeing: two results from on pass, then merge them
+        double average = orders.stream().collect(Collectors.teeing(
+                Collectors.summingDouble(Order::totalAmount),
+                Collectors.counting(),
+                (sum, count) -> sum /count
+        ));
+        System.out.println("Average basket: "+ average);
     }
 }
