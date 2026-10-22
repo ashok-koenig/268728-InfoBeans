@@ -1,6 +1,6 @@
 package resources;
 
-public class TrackedResource implements AutoCloseable{
+public class TrackedResource implements AutoCloseable {
     private final String name;
 
     public TrackedResource(String name) {
@@ -15,8 +15,8 @@ public class TrackedResource implements AutoCloseable{
         }
     }
 
-    @Override
-    public void close() throws Exception {
+
+    public void close() {
         System.out.println("close "+ name);
     }
 }
