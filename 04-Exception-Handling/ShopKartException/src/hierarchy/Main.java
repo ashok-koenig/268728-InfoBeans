@@ -29,6 +29,22 @@ public class Main {
         System.out.println("StackOverflowError is an Error: "+
                 Error.class.isAssignableFrom(StackOverflowError.class));
 
+        // The stack unwinding untile someone handles the exception
+        try{
+            placeOrder();
+        }catch (IllegalStateException e){
+            System.out.println("Handled in main: "+ e.getMessage());
+        }
         System.out.println("The End");
+    }
+
+    static void placeOrder() {
+        System.out.println("PlaceOrder Starts");
+        checkStock();
+        System.out.println("PlaceOrder ends");
+    }
+    static void checkStock(){
+        System.out.println("checkStock fails");
+        throw new IllegalStateException("Laptop is out of stock");
     }
 }
