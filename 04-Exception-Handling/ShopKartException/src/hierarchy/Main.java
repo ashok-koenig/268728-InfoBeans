@@ -1,6 +1,7 @@
 package hierarchy;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,6 +19,15 @@ public class Main {
             System.out.println(" "+ type.getSimpleName());
             type = type.getSuperclass();
         }
+
+        System.out.println("IOException is unchecked: "+
+                RuntimeException.class.isAssignableFrom(IOException.class));
+
+        System.out.println("ArithmeticException is unchecked: "+
+                RuntimeException.class.isAssignableFrom(ArithmeticException.class));
+
+        System.out.println("StackOverflowError is an Error: "+
+                Error.class.isAssignableFrom(StackOverflowError.class));
 
         System.out.println("The End");
     }
