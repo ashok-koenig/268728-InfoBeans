@@ -3,7 +3,9 @@ package locks;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Main {
 
@@ -30,6 +32,27 @@ public class Main {
         }
         long get(){
             return count;
+        }
+    }
+
+    static class PriceList {
+        private final ReadWriteLock rw = new ReentrantReadWriteLock();
+        private int price = 65000;
+        int read(){
+            rw.readLock().lock();
+            try{
+                return price;
+            }finally {
+                rw.readLock().unlock();
+            }
+        }
+        void write(int newPrice){
+            rw.writeLock().lock();
+            try{
+                price = newPrice;
+            }finally {
+                rw.writeLock().unlock();
+            }
         }
     }
 
@@ -76,5 +99,17 @@ public class Main {
         });
         System.out.println("LongAdder: "+ adder.sum());
         System.out.println("LongAdder Time: "+ (System.nanoTime() - start)/1000000);
+
+        PriceList prices = new PriceList();
+        AtomicLong reads = new AtomicLong();
+        onFourThread(()-> {
+            for (int i=0;i<10000; i++){
+                prices.read();
+                reads.incrementAndGet();
+            }
+        });
+        prices.write(59999);
+        System.out.println("Reads completed: "+ reads.get());
+        System.out.println("Price now: "+ prices.read());
     }
 }
