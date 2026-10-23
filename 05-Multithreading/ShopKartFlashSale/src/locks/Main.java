@@ -1,5 +1,7 @@
 package locks;
 
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -58,5 +60,21 @@ public class Main {
         });
         System.out.println("locked: "+ locked.get());
         System.out.println("locked Time: "+ (System.nanoTime() - start)/1000000);
+
+        AtomicLong atomic = new AtomicLong();
+        start = System.nanoTime();
+        onFourThread(()-> {
+            for (int i=0; i<10000; i++) atomic.incrementAndGet();
+        });
+        System.out.println("AtomicLong: "+ atomic.get());
+        System.out.println("AtomicLong Time: "+ (System.nanoTime() - start)/1000000);
+
+        LongAdder adder = new LongAdder();
+        start = System.nanoTime();
+        onFourThread(()-> {
+            for (int i=0; i<10000; i++) adder.increment();
+        });
+        System.out.println("LongAdder: "+ adder.sum());
+        System.out.println("LongAdder Time: "+ (System.nanoTime() - start)/1000000);
     }
 }
