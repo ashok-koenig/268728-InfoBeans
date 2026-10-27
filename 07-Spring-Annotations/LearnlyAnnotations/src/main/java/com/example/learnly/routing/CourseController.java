@@ -32,4 +32,11 @@ public class CourseController {
     public Course create(@RequestBody CreateCourseRequest request){
         return service.add(request);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable long id){
+        service.remove(id);
+    }
+
 }
