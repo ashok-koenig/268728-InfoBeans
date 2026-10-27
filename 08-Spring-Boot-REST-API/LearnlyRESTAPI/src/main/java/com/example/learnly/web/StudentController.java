@@ -19,27 +19,29 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> list(){
-        return service.findAll();
+    public List<StudentResponse> list(){
+        return service.findAll().stream().map(StudentMapper::toResponse).toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> get(@PathVariable long id){
-        return service.find(id)
+    public ResponseEntity<StudentResponse> get(@PathVariable long id){
+        return service.find(id).map(StudentMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
     @PostMapping
-    public ResponseEntity<Student> create(@RequestBody Student student){
-        Student saved = service.create(student);
+    public ResponseEntity<StudentResponse> create(@RequestBody StudentRequest request){
+        Student saved = service.create(StudentMapper.toEntity(request));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(saved.getId()).toUri();
-        return ResponseEntity.created(location).body(saved);
+        return ResponseEntity.created(location).body(StudentMapper.toResponse(saved));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> replace(@PathVariable long id, @RequestBody Student student){
-        return service.replace(id, student)
+    public ResponseEntity<StudentResponse> replace(@PathVariable long id,
+                                                   @RequestBody StudentRequest request){
+        return service.replace(id, StudentMapper.toEntity(request))
+                .map(StudentMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
