@@ -2,6 +2,7 @@ package com.example.learnly.web;
 
 import com.example.learnly.model.Student;
 import com.example.learnly.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -30,7 +31,7 @@ public class StudentController {
                 .orElse(ResponseEntity.notFound().build());
     }
     @PostMapping
-    public ResponseEntity<StudentResponse> create(@RequestBody StudentRequest request){
+    public ResponseEntity<StudentResponse> create(@Valid @RequestBody StudentRequest request){
         Student saved = service.create(StudentMapper.toEntity(request));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(saved.getId()).toUri();
@@ -39,7 +40,7 @@ public class StudentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<StudentResponse> replace(@PathVariable long id,
-                                                   @RequestBody StudentRequest request){
+                                                   @Valid @RequestBody StudentRequest request){
         return service.replace(id, StudentMapper.toEntity(request))
                 .map(StudentMapper::toResponse)
                 .map(ResponseEntity::ok)
