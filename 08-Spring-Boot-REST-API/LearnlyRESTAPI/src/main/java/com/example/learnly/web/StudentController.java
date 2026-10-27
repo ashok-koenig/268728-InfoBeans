@@ -25,10 +25,8 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentResponse> get(@PathVariable long id){
-        return service.find(id).map(StudentMapper::toResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public StudentResponse get(@PathVariable long id){
+        return StudentMapper.toResponse(service.find(id));
     }
     @PostMapping
     public ResponseEntity<StudentResponse> create(@Valid @RequestBody StudentRequest request){
@@ -39,18 +37,12 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentResponse> replace(@PathVariable long id,
+    public StudentResponse replace(@PathVariable long id,
                                                    @Valid @RequestBody StudentRequest request){
-        return service.replace(id, StudentMapper.toEntity(request))
-                .map(StudentMapper::toResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return StudentMapper.toResponse(service.replace(id, StudentMapper.toEntity(request)));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id){
-        if(!service.delete(id)){
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.noContent().build();
     }
 }

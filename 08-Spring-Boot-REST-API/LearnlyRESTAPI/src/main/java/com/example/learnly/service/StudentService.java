@@ -1,5 +1,6 @@
 package com.example.learnly.service;
 
+import com.example.learnly.exception.StudentNotFoundException;
 import com.example.learnly.model.Student;
 import com.example.learnly.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,8 @@ public class StudentService {
         return repository.findAll();
     }
 
-    public Optional<Student> find(long id) {
-        return repository.findById(id);
+    public Student find(long id) {
+        return repository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
     }
 
     public Student create(Student student) {
@@ -28,15 +29,14 @@ public class StudentService {
         return repository.save(student);
     }
 
-    public Optional<Student> replace(long id, Student student) {
-        if (repository.findById(id).isEmpty()) {
-            return Optional.empty();
-        }
+    public Student replace(long id, Student student) {
+        find(id);
         student.setId(id);
-        return Optional.of(repository.save(student));
+        return repository.save(student);
     }
 
     public boolean delete(long id) {
+        find(id);
         return repository.deleteById(id);
     }
 }
