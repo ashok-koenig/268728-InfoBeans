@@ -1,9 +1,9 @@
 package com.example.learnly.routing;
 
 import com.example.learnly.model.Course;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.learnly.model.Level;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,7 +17,19 @@ public class CourseController {
     }
 
     @GetMapping
-    public List<Course> list() {
-        return service.list(null, 10);
+    public List<Course> list(@RequestParam(required = false) Level level,
+                             @RequestParam(defaultValue = "10") int limit) {
+        return service.list(level, limit);
+    }
+
+    @GetMapping("/{id}")
+    public Course get(@PathVariable long id){
+        return service.find(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Course create(@RequestBody CreateCourseRequest request){
+        return service.add(request);
     }
 }
