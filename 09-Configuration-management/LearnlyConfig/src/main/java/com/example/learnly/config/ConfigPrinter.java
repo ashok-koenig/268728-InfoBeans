@@ -12,10 +12,12 @@ public class ConfigPrinter implements CommandLineRunner {
 
     private final Environment env;
     private final String sender;
+    private final MailProperties mail;
 
-    public ConfigPrinter(Environment env, @Value("${learnly.mail.sender}") String sender) {
+    public ConfigPrinter(Environment env, @Value("${learnly.mail.sender}") String sender, MailProperties mail) {
         this.env = env;
         this.sender = sender;
+        this.mail = mail;
     }
 
     @Override
@@ -23,10 +25,11 @@ public class ConfigPrinter implements CommandLineRunner {
         System.out.println("application: " + env.getProperty("spring.application.name"));
 
         System.out.println("profiles: " + Arrays.toString(env.getActiveProfiles()));
-        System.out.println("mail host   : " + env.getProperty("learnly.mail.host"));
-        System.out.println("mail port   : " + env.getProperty("learnly.mail.port"));
-        System.out.println("retry count : " + env.getProperty("learnly.mail.retry-count"));
-        System.out.println("sender: "+ sender);
+        System.out.println("mail: "+ mail);
+//        System.out.println("mail host   : " + env.getProperty("learnly.mail.host"));
+//        System.out.println("mail port   : " + env.getProperty("learnly.mail.port"));
+//        System.out.println("retry count : " + env.getProperty("learnly.mail.retry-count"));
+//        System.out.println("sender: "+ sender);
         System.out.println("database url: " + env.getProperty("learnly.datasource.url"));
 
     }
