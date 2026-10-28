@@ -18,7 +18,18 @@ public record MailProperties(
         String sender,
         @Min(0) @Max(10)
         int retryCount,
-        boolean enabled
+        boolean enabled,
+        String password
 ) {
-
+        @Override
+        public String toString() {
+                return "MailProperties{" +
+                        "host='" + host + '\'' +
+                        ", port=" + port +
+                        ", sender='" + sender + '\'' +
+                        ", retryCount=" + retryCount +
+                        ", enabled=" + enabled +
+                        ", password=******* " +
+                        '}';
+        }
 }

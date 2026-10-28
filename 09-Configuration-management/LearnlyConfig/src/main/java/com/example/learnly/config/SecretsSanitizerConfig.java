@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 
 @Configuration
-@Profile("safe")
+@Profile({"safe", "prod"})
 public class SecretsSanitizerConfig {
 
     @EventListener(ApplicationReadyEvent.class)
