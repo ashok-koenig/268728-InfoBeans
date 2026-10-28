@@ -1,5 +1,6 @@
 package com.example.learnly.config;
 
+import com.example.learnly.service.NotificationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.env.Environment;
@@ -13,11 +14,16 @@ public class ConfigPrinter implements CommandLineRunner {
     private final Environment env;
     private final String sender;
     private final MailProperties mail;
+    private final NotificationService service;
 
-    public ConfigPrinter(Environment env, @Value("${learnly.mail.sender}") String sender, MailProperties mail) {
+    public ConfigPrinter(Environment env,
+                         @Value("${learnly.mail.sender}") String sender,
+                         MailProperties mail,
+                         NotificationService service) {
         this.env = env;
         this.sender = sender;
         this.mail = mail;
+        this.service = service;
     }
 
     @Override
@@ -26,6 +32,7 @@ public class ConfigPrinter implements CommandLineRunner {
 
         System.out.println("profiles: " + Arrays.toString(env.getActiveProfiles()));
         System.out.println("mail: "+ mail);
+        System.out.println(service.send("asha@email.com", "Welcome to Learnly"));
 //        System.out.println("mail host   : " + env.getProperty("learnly.mail.host"));
 //        System.out.println("mail port   : " + env.getProperty("learnly.mail.port"));
 //        System.out.println("retry count : " + env.getProperty("learnly.mail.retry-count"));
