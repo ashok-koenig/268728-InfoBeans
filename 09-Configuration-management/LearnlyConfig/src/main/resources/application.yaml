@@ -1,0 +1,4 @@
+learnly:
+  mail:
+    host: yaml.learnly.example
+    port: 2525
