@@ -7,10 +7,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class NotificationListener {
+    private final ProcessedEvents processed;
+
+    public NotificationListener(ProcessedEvents processed) {
+        this.processed = processed;
+    }
+
     @JmsListener(destination = Destinations.ENROLLMENT)
     public void onEnrollment(EnrollmentEvent event, Message raw) throws JMSException {
 
         int attempt = raw.getIntProperty("JMSXDeliveryCount");
+
+        if(processed.contains(event.eventId())){
+            System.out.println("Skipped duplicate: "+ event.eventId());
+            return;
+        }
 
         if(event.course() == null || event.course().isBlank()){
             System.out.println(event.eventId() + " attempt " + attempt + " failed: course is missing");
@@ -23,6 +34,8 @@ public class NotificationListener {
 
         System.out.println("Welcome email to "+ event.studentName() +
                 " <email: "+ event.email() + ", course: "+ event.course() + ">, attempt: "+ attempt);
+
+        processed.markDone(event.eventId());
     }
 //    @JmsListener(destination = Destinations.ENROLLMENT)
 //    public void onMessage(String text){
