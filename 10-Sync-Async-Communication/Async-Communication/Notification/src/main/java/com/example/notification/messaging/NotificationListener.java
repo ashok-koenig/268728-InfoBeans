@@ -9,7 +9,15 @@ import org.springframework.stereotype.Component;
 public class NotificationListener {
     @JmsListener(destination = Destinations.ENROLLMENT)
     public void onEnrollment(EnrollmentEvent event, Message raw) throws JMSException {
+
         int attempt = raw.getIntProperty("JMSXDeliveryCount");
+
+        if(event.course() == null || event.course().isBlank()){
+            System.out.println(event.eventId() + " attempt " + attempt + " failed: course is missing");
+            throw new IllegalArgumentException("course is missing");
+        }
+
+
         System.out.println(raw.getJMSMessageID() + " correlation=" + raw.getJMSCorrelationID()
         + " businessId= "+ raw.getStringProperty("businessId"));
 

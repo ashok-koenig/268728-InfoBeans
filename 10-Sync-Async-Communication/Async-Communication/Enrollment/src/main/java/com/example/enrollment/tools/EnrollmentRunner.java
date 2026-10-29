@@ -19,6 +19,8 @@ public class EnrollmentRunner implements CommandLineRunner {
 
         publisher.publish(new EnrollmentEvent("e-101",
                 "Asha", "asha@mail.com", "Spring Boot Essentials"));
+        publisher.publish(new EnrollmentEvent("e-102",
+                "Bob", "bob@mail.com", ""));
 
 //        publisher.publish("Asha enrolled in Spring Boot Essentials");
     }
