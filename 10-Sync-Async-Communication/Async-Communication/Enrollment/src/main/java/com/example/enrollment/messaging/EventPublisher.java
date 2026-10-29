@@ -11,7 +11,16 @@ public class EventPublisher {
         this.jmsTemplate = jmsTemplate;
     }
 
-    public void publish(String text){
-        jmsTemplate.convertAndSend(Destinations.ENROLLMENT, text);
+    public void publish(EnrollmentEvent event){
+        jmsTemplate.convertAndSend(Destinations.ENROLLMENT, event, message -> {
+            message.setJMSCorrelationID(event.eventId());
+            message.setStringProperty("businessId", event.eventId());
+            return message;
+        });
     }
+
+//    public void publish(String text){
+//        jmsTemplate.convertAndSend(Destinations.ENROLLMENT, text);
+//    }
+
 }

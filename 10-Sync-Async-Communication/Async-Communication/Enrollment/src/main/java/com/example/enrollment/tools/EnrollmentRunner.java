@@ -1,5 +1,6 @@
 package com.example.enrollment.tools;
 
+import com.example.enrollment.messaging.EnrollmentEvent;
 import com.example.enrollment.messaging.EventPublisher;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,9 @@ public class EnrollmentRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("Enrolling students");
 
-        publisher.publish("Asha enrolled in Spring Boot Essentials");
+        publisher.publish(new EnrollmentEvent("e-101",
+                "Asha", "asha@mail.com", "Spring Boot Essentials"));
+
+//        publisher.publish("Asha enrolled in Spring Boot Essentials");
     }
 }
