@@ -66,4 +66,14 @@ public class CourseController {
     public List<CourseResponse> launchedBefore(@RequestParam LocalDate date){
         return service.launchBefore(date);
     }
+
+    @GetMapping("/search/jpql")
+    public List<CourseResponse> jpqlQuery(@RequestParam String category){
+        return service.jpqlQuery(category);
+    }
+
+    @GetMapping("/search/native")
+    public List<CourseResponse> nativeQuery(@RequestParam String category){
+        return service.nativeQuery(category);
+    }
 }

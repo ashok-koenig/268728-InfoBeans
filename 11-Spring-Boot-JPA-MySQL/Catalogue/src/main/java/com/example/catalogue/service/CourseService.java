@@ -64,4 +64,12 @@ public class CourseService {
     private List<CourseResponse> map(List<Course> list){
         return list.stream().map(CourseResponse::from).toList();
     }
+
+    public List<CourseResponse> jpqlQuery(String category){
+        return map(repository.jpqlByCategory(category));
+    }
+
+    public List<CourseResponse> nativeQuery(String category){
+        return map(repository.nativeByCategory(category));
+    }
 }
