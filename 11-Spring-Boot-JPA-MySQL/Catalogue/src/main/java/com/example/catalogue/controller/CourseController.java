@@ -2,9 +2,11 @@ package com.example.catalogue.controller;
 
 import com.example.catalogue.dto.CourseRequest;
 import com.example.catalogue.dto.CourseResponse;
+import com.example.catalogue.dto.PageResponse;
 import com.example.catalogue.entity.CourseStatus;
 import com.example.catalogue.service.CourseService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +34,8 @@ public class CourseController {
     }
 
     @GetMapping
-    public List<CourseResponse> list(){
-        return service.findAll();
+    public PageResponse<CourseResponse> list(Pageable pageable){
+        return service.findAll(pageable);
     }
 
     @GetMapping("/{id}")
@@ -53,8 +55,8 @@ public class CourseController {
     }
 
     @GetMapping("/search/by-status")
-    public List<CourseResponse> byStatus(@RequestParam CourseStatus status){
-        return service.byStatus(status);
+    public PageResponse<CourseResponse> byStatus(@RequestParam CourseStatus status, Pageable pageable){
+        return service.byStatus(status, pageable);
     }
 
     @GetMapping("/search/by-title")

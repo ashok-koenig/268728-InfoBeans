@@ -2,10 +2,13 @@ package com.example.catalogue.service;
 
 import com.example.catalogue.dto.CourseRequest;
 import com.example.catalogue.dto.CourseResponse;
+import com.example.catalogue.dto.PageResponse;
 import com.example.catalogue.entity.Course;
 import com.example.catalogue.entity.CourseStatus;
 import com.example.catalogue.exception.CourseNotFoundException;
 import com.example.catalogue.repository.CourseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,8 +28,9 @@ public class CourseService {
         return CourseResponse.from(repository.save(course));
     }
 
-    public List<CourseResponse> findAll() {
-        return repository.findAll().stream().map(CourseResponse::from).toList();
+    public PageResponse<CourseResponse> findAll(Pageable pageable) {
+        Page<Course> page = repository.findAll(pageable);
+        return PageResponse.from(page.map(CourseResponse::from));
     }
 
     public CourseResponse get(Long id){
@@ -49,8 +53,9 @@ public class CourseService {
         repository.deleteById(id);
     }
 
-    public List<CourseResponse> byStatus(CourseStatus status){
-        return map(repository.findByStatus(status));
+    public PageResponse<CourseResponse> byStatus(CourseStatus status, Pageable pageable){
+        Page<Course> page = repository.findByStatus(status, pageable);
+        return PageResponse.from(page.map(CourseResponse::from));
     }
 
     public List<CourseResponse> byTitle(String text){
