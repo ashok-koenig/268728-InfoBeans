@@ -10,6 +10,9 @@ import com.example.catalogue.exception.CourseNotFoundException;
 import com.example.catalogue.exception.PaymentFailedException;
 import com.example.catalogue.repository.ActivityLogRepository;
 import com.example.catalogue.repository.CourseRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,8 @@ public class CourseService {
         this.logRepository = logRepository;
     }
 
+    @CacheEvict(value = "courses", key = "#id")
+    @Transactional
     public CourseResponse publish(Long id, boolean paymentFails){
         Course course = repository.findById(id).orElseThrow(() -> new CourseNotFoundException(id));
         course.setStatus(CourseStatus.PUBLISHED);
@@ -49,10 +54,12 @@ public class CourseService {
         return PageResponse.from(page.map(CourseResponse::from));
     }
 
+    @Cacheable("courses")
     public CourseResponse get(Long id){
         return repository.findById(id).map(CourseResponse::from).orElseThrow(() -> new CourseNotFoundException(id));
     }
 
+    @CacheEvict(value = "courses", key = "#id")
     public CourseResponse update(Long id, CourseRequest request){
         Course course = repository.findById(id).orElseThrow(() -> new CourseNotFoundException(id));
         course.setTitle(request.title());
@@ -62,6 +69,7 @@ public class CourseService {
         return CourseResponse.from(repository.save(course));
     }
 
+    @CacheEvict(value = "courses", key = "#id")
     public void delete(Long id){
         if(!repository.existsById(id)){
             throw new CourseNotFoundException(id);
