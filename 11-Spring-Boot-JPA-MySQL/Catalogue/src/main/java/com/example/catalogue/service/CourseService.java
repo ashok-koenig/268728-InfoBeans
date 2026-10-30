@@ -8,6 +8,7 @@ import com.example.catalogue.exception.CourseNotFoundException;
 import com.example.catalogue.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -46,5 +47,21 @@ public class CourseService {
             throw new CourseNotFoundException(id);
         }
         repository.deleteById(id);
+    }
+
+    public List<CourseResponse> byStatus(CourseStatus status){
+        return map(repository.findByStatus(status));
+    }
+
+    public List<CourseResponse> byTitle(String text){
+        return map(repository.findByTitleContainingIgnoreCase(text));
+    }
+
+    public List<CourseResponse> launchBefore(LocalDate date) {
+        return map(repository.findByLaunchDateBeforeAndStatusNot(date, CourseStatus.ARCHIVED));
+    }
+
+    private List<CourseResponse> map(List<Course> list){
+        return list.stream().map(CourseResponse::from).toList();
     }
 }
