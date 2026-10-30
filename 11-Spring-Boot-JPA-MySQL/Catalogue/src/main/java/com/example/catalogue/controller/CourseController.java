@@ -3,6 +3,7 @@ package com.example.catalogue.controller;
 import com.example.catalogue.dto.CourseRequest;
 import com.example.catalogue.dto.CourseResponse;
 import com.example.catalogue.service.CourseService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<CourseResponse> create(@RequestBody CourseRequest request){
+    public ResponseEntity<CourseResponse> create(@Valid @RequestBody CourseRequest request){
         CourseResponse created = service.create(request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(created.id()).toUri();
@@ -39,7 +40,7 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    public CourseResponse update(@PathVariable Long id, @RequestBody CourseRequest request){
+    public CourseResponse update(@PathVariable Long id,@Valid @RequestBody CourseRequest request){
         return service.update(id, request);
     }
 
