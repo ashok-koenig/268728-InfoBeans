@@ -3,9 +3,12 @@ package com.example.catalogue.service;
 import com.example.catalogue.dto.CourseRequest;
 import com.example.catalogue.dto.CourseResponse;
 import com.example.catalogue.dto.PageResponse;
+import com.example.catalogue.entity.ActivityLog;
 import com.example.catalogue.entity.Course;
 import com.example.catalogue.entity.CourseStatus;
 import com.example.catalogue.exception.CourseNotFoundException;
+import com.example.catalogue.exception.PaymentFailedException;
+import com.example.catalogue.repository.ActivityLogRepository;
 import com.example.catalogue.repository.CourseRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +21,22 @@ import java.util.List;
 @Service
 public class CourseService {
     private final CourseRepository repository;
+    private final ActivityLogRepository logRepository;
 
-    public CourseService(CourseRepository repository) {
+    public CourseService(CourseRepository repository, ActivityLogRepository logRepository) {
         this.repository = repository;
+        this.logRepository = logRepository;
+    }
+
+    public CourseResponse publish(Long id, boolean paymentFails){
+        Course course = repository.findById(id).orElseThrow(() -> new CourseNotFoundException(id));
+        course.setStatus(CourseStatus.PUBLISHED);
+        repository.save(course);
+        logRepository.save(new ActivityLog("Published course "+ id));
+        if(paymentFails){
+            throw new PaymentFailedException(id);
+        }
+        return CourseResponse.from(course);
     }
 
     public CourseResponse create(CourseRequest request){

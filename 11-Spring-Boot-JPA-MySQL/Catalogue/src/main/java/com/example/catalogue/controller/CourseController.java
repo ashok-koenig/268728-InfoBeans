@@ -25,6 +25,11 @@ public class CourseController {
         this.service = service;
     }
 
+    @GetMapping("/{id}/publish")
+    public CourseResponse publish(@PathVariable Long id, @RequestParam boolean paymentFails){
+        return service.publish(id, paymentFails);
+    }
+
     @PostMapping
     public ResponseEntity<CourseResponse> create(@Valid @RequestBody CourseRequest request){
         CourseResponse created = service.create(request);
