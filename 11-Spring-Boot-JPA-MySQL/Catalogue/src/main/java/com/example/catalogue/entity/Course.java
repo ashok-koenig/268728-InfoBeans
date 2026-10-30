@@ -25,5 +25,50 @@ public class Course {
     public Course() {
     }
 
+    public Course(String title, CourseStatus status, LocalDate launchDate, String category) {
+        this.title = title;
+        this.status = status;
+        this.launchDate = launchDate;
+        this.category = category;
+    }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public CourseStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CourseStatus status) {
+        this.status = status;
+    }
+
+    public LocalDate getLaunchDate() {
+        return launchDate;
+    }
+
+    public void setLaunchDate(LocalDate launchDate) {
+        this.launchDate = launchDate;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }
