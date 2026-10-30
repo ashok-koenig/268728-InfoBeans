@@ -2,6 +2,7 @@ package com.example.catalogue.controller;
 
 import com.example.catalogue.dto.CourseRequest;
 import com.example.catalogue.dto.CourseResponse;
+import com.example.catalogue.entity.CourseStatus;
 import com.example.catalogue.service.CourseService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -48,5 +50,20 @@ public class CourseController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         service.delete(id);
+    }
+
+    @GetMapping("/search/by-status")
+    public List<CourseResponse> byStatus(@RequestParam CourseStatus status){
+        return service.byStatus(status);
+    }
+
+    @GetMapping("/search/by-title")
+    public List<CourseResponse> byTitle(@RequestParam String text){
+        return service.byTitle(text);
+    }
+
+    @GetMapping("/search/launched-before")
+    public List<CourseResponse> launchedBefore(@RequestParam LocalDate date){
+        return service.launchBefore(date);
     }
 }
