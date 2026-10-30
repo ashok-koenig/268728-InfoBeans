@@ -3,6 +3,7 @@ package com.example.catalogue.controller;
 import com.example.catalogue.dto.CourseRequest;
 import com.example.catalogue.dto.CourseResponse;
 import com.example.catalogue.service.CourseService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -30,5 +31,21 @@ public class CourseController {
     @GetMapping
     public List<CourseResponse> list(){
         return service.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public CourseResponse get(@PathVariable Long id){
+        return service.get(id);
+    }
+
+    @PutMapping("/{id}")
+    public CourseResponse update(@PathVariable Long id, @RequestBody CourseRequest request){
+        return service.update(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id){
+        service.delete(id);
     }
 }
