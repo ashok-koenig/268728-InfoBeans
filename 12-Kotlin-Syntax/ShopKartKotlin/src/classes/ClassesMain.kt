@@ -13,4 +13,16 @@ fun main() {
 
     parcel.status = ShipStatus.DELIVERED
     println("Delivered: " + parcel.isDelivered)
+    try {
+        Parcel(2, " ")
+    } catch(e: IllegalArgumentException) {
+        println(e.message)
+    }
+
+    println(Parcel("Quick Parcel").id)
+    println(Parcel(5).label)
+
+    println(parcel.note)
+//    parcel.note = "Unable to update"
+    println(parcel.debugInfo())
 }
