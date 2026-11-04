@@ -23,4 +23,13 @@ fun main(){
     for(state in states){
         println(describe(state))
     }
+
+    val shipment = Shipment(1)
+    println(describe(shipment.delivery))
+    val onTheWay = shipment.ship("TRK-1002")
+    println(describe(onTheWay.delivery))
+    val held = onTheWay.hold("customer not home")
+    println(describe(held.delivery))
+    val done = held.deliver(LocalDate.of(2026, 11, 4))
+    println(describe(done.delivery))
 }
