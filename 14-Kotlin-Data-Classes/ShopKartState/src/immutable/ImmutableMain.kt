@@ -13,9 +13,9 @@ fun main() {
     println(delivered.status)
     println(delivered)
 
-    val a = Basket("Asha", mutableListOf("Mouse"))
-    val b = a.copy(owner = "Bob")
-    b.items.add("Pen")
+    val a = Basket("Asha", listOf("Mouse"))
+    val b = a.copy(owner = "Bob", listOf("Mouse", "Pen"))
+//    b.items.add("Pen")
     println(a)
     println(b)
 }
