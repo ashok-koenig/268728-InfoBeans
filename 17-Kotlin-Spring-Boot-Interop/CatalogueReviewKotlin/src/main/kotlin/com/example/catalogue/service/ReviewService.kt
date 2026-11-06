@@ -1,5 +1,6 @@
 package com.example.catalogue.service
 
+import com.example.catalogue.config.ReviewProperties
 import com.example.catalogue.dto.ReviewRequest
 import com.example.catalogue.dto.ReviewResponse
 import com.example.catalogue.dto.ReviewSummary
@@ -15,14 +16,16 @@ import org.springframework.stereotype.Service
 class ReviewService(
     private val reviewRepository: ReviewRepository,
     private val courseService: CourseService,
+    private val reviewProperties: ReviewProperties
 ) {
-    private companion object {
-        const val MAX_PER_COURSE = 3
-    }
+//    private companion object {
+//        const val MAX_PER_COURSE = 3
+//    }
     fun add(courseId: Long, request: ReviewRequest): ReviewResponse {
         courseService.get(courseId)
-        if(reviewRepository.countByCourseId(courseId) >= MAX_PER_COURSE) {
-            throw ReviewLimitExceededException(MAX_PER_COURSE)
+        if(reviewRepository.countByCourseId(courseId) >= reviewProperties.maxPerCourse) {
+//            println(reviewProperties.maxPerCourse)
+            throw ReviewLimitExceededException(reviewProperties.maxPerCourse)
         }
         val reviewer = if (request.anonymous) "anonymous" else "student"
         return reviewRepository.save(Review( courseId,
