@@ -2,6 +2,7 @@ package com.example.catalogue.service
 
 import com.example.catalogue.dto.ReviewRequest
 import com.example.catalogue.dto.ReviewResponse
+import com.example.catalogue.dto.ReviewSummary
 import com.example.catalogue.entity.Review
 import com.example.catalogue.exception.ReviewNotFoundException
 import com.example.catalogue.repository.ReviewRepository
@@ -33,4 +34,16 @@ class ReviewService(
         reviewRepository.findByIdOrNull(id)?.let {
             ReviewResponse(it.id, it.courseId, it.rating, it.comment, it.reviewer)
         } ?: throw ReviewNotFoundException(id)
+
+    fun summary (courseId: Long) : ReviewSummary {
+        courseService.get(courseId)
+        val ratings = reviewRepository.findByCourseId(courseId).map {it.rating}
+
+        return ReviewSummary(
+            courseId = courseId,
+            count = ratings.size,
+            average = if(ratings.isNotEmpty()) ratings.average() else 0.0,
+            histogram = (1..5).associateWith { r -> ratings.count { it == r } }
+        )
+    }
 }
