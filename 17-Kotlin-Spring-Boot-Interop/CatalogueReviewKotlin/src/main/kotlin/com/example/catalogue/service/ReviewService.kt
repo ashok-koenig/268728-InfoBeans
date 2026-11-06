@@ -5,6 +5,7 @@ import com.example.catalogue.dto.ReviewResponse
 import com.example.catalogue.dto.ReviewSummary
 import com.example.catalogue.dto.toResponse
 import com.example.catalogue.entity.Review
+import com.example.catalogue.exception.ReviewLimitExceededException
 import com.example.catalogue.exception.ReviewNotFoundException
 import com.example.catalogue.repository.ReviewRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -15,8 +16,14 @@ class ReviewService(
     private val reviewRepository: ReviewRepository,
     private val courseService: CourseService,
 ) {
+    private companion object {
+        const val MAX_PER_COURSE = 3
+    }
     fun add(courseId: Long, request: ReviewRequest): ReviewResponse {
         courseService.get(courseId)
+        if(reviewRepository.countByCourseId(courseId) >= MAX_PER_COURSE) {
+            throw ReviewLimitExceededException(MAX_PER_COURSE)
+        }
         val reviewer = if (request.anonymous) "anonymous" else "student"
         return reviewRepository.save(Review( courseId,
             request.rating, request.comment, reviewer)).toResponse()
@@ -24,7 +31,7 @@ class ReviewService(
 
     fun list(courseId: Long): List<ReviewResponse> {
         courseService.get(courseId)
-        return reviewRepository.findByCourseId(courseId). map(Review::toResponse)
+        return reviewRepository.findByCourseId(courseId).map(Review::toResponse)
     }
 
     fun get(id: Long): ReviewResponse =
