@@ -2,6 +2,7 @@ package com.example.catalogue.controller
 
 import com.example.catalogue.dto.ReviewRequest
 import com.example.catalogue.dto.ReviewResponse
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,7 +16,7 @@ class ReviewController {
     @PostMapping("/api/courses/{courseId}/reviews")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@PathVariable("courseId") courseId: Long,
-               @RequestBody request: ReviewRequest
+              @Valid @RequestBody request: ReviewRequest
     ) = ReviewResponse(courseId,
         request.rating,
         request.comment,
