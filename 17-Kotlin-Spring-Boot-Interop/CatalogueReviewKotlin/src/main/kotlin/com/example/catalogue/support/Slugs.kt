@@ -1,3 +1,5 @@
+@file:JvmName("Slugs")
+
 package com.example.catalogue.support
 
 fun slugify(title: String): String {

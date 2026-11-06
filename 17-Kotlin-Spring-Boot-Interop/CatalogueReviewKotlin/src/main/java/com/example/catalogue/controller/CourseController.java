@@ -5,7 +5,7 @@ import com.example.catalogue.dto.CourseResponse;
 import com.example.catalogue.dto.PageResponse;
 import com.example.catalogue.entity.CourseStatus;
 import com.example.catalogue.service.CourseService;
-import com.example.catalogue.support.SlugsKt;
+import com.example.catalogue.support.Slugs;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -88,6 +88,6 @@ public class CourseController {
 
     @GetMapping("/{id}/slug")
     public Map<String, String> slug(@PathVariable Long id){
-        return Map.of("slug", SlugsKt.slugify(service.get(id).title()));
+        return Map.of("slug", Slugs.slugify(service.get(id).title()));
     }
 }
