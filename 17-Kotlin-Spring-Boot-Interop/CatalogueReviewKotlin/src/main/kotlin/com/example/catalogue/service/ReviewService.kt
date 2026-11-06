@@ -3,6 +3,7 @@ package com.example.catalogue.service
 import com.example.catalogue.dto.ReviewRequest
 import com.example.catalogue.dto.ReviewResponse
 import com.example.catalogue.dto.ReviewSummary
+import com.example.catalogue.dto.toResponse
 import com.example.catalogue.entity.Review
 import com.example.catalogue.exception.ReviewNotFoundException
 import com.example.catalogue.repository.ReviewRepository
@@ -17,23 +18,17 @@ class ReviewService(
     fun add(courseId: Long, request: ReviewRequest): ReviewResponse {
         courseService.get(courseId)
         val reviewer = if (request.anonymous) "anonymous" else "student"
-        val saved = reviewRepository.save(Review( courseId,
-            request.rating, request.comment, reviewer))
-        return ReviewResponse(saved.id, saved.courseId,
-            saved.rating, saved.comment, saved.reviewer)
+        return reviewRepository.save(Review( courseId,
+            request.rating, request.comment, reviewer)).toResponse()
     }
 
     fun list(courseId: Long): List<ReviewResponse> {
         courseService.get(courseId)
-        return reviewRepository.findByCourseId(courseId). map {
-            ReviewResponse(it.id, it.courseId, it.rating, it.comment, it.reviewer)
-        }
+        return reviewRepository.findByCourseId(courseId). map(Review::toResponse)
     }
 
     fun get(id: Long): ReviewResponse =
-        reviewRepository.findByIdOrNull(id)?.let {
-            ReviewResponse(it.id, it.courseId, it.rating, it.comment, it.reviewer)
-        } ?: throw ReviewNotFoundException(id)
+        reviewRepository.findByIdOrNull(id)?.toResponse() ?: throw ReviewNotFoundException(id)
 
     fun summary (courseId: Long) : ReviewSummary {
         courseService.get(courseId)
