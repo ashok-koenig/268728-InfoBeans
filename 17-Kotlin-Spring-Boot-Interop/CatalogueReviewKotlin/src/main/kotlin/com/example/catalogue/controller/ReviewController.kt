@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class ReviewController {
 
-    @PostMapping("/api/coruses/{courseId}/reviews")
+    @PostMapping("/api/courses/{courseId}/reviews")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@PathVariable("courseId") courseId: Long,
                @RequestBody request: ReviewRequest
