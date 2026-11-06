@@ -3,7 +3,9 @@ package com.example.catalogue.service
 import com.example.catalogue.dto.ReviewRequest
 import com.example.catalogue.dto.ReviewResponse
 import com.example.catalogue.entity.Review
+import com.example.catalogue.exception.ReviewNotFoundException
 import com.example.catalogue.repository.ReviewRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,7 +16,7 @@ class ReviewService(
     fun add(courseId: Long, request: ReviewRequest): ReviewResponse {
         courseService.get(courseId)
         val reviewer = if (request.anonymous) "anonymous" else "student"
-        val saved = reviewRepository.save(Review(courseId = courseId,
+        val saved = reviewRepository.save(Review( courseId,
             request.rating, request.comment, reviewer))
         return ReviewResponse(saved.id, saved.courseId,
             saved.rating, saved.comment, saved.reviewer)
@@ -26,4 +28,9 @@ class ReviewService(
             ReviewResponse(it.id, it.courseId, it.rating, it.comment, it.reviewer)
         }
     }
+
+    fun get(id: Long): ReviewResponse =
+        reviewRepository.findByIdOrNull(id)?.let {
+            ReviewResponse(it.id, it.courseId, it.rating, it.comment, it.reviewer)
+        } ?: throw ReviewNotFoundException(id)
 }

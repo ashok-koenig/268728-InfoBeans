@@ -26,4 +26,7 @@ class ReviewController(
     @GetMapping("/api/courses/{courseId}/reviews")
     fun list(@PathVariable("courseId") courseId: Long) =
         reviewService.list(courseId)
+    
+    @GetMapping("/api/reviews/{id}")
+    fun get(@PathVariable("id") id: Long) = reviewService.get(id)
 }
