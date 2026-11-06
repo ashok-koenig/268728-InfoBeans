@@ -5,6 +5,7 @@ import com.example.catalogue.dto.CourseResponse;
 import com.example.catalogue.dto.PageResponse;
 import com.example.catalogue.entity.CourseStatus;
 import com.example.catalogue.service.CourseService;
+import com.example.catalogue.support.SlugsKt;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -82,5 +84,10 @@ public class CourseController {
     @GetMapping("/search/native")
     public List<CourseResponse> nativeQuery(@RequestParam String category){
         return service.nativeQuery(category);
+    }
+
+    @GetMapping("/{id}/slug")
+    public Map<String, String> slug(@PathVariable Long id){
+        return Map.of("slug", SlugsKt.slugify(service.get(id).title()));
     }
 }
