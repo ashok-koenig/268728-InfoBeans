@@ -8,6 +8,8 @@ import com.example.enrollment.domain.SeatBatchRepository
 import com.example.enrollment.exception.BusinessException
 import com.example.enrollment.exception.ErrorKind
 import org.springframework.boot.web.error.Error
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -35,6 +37,20 @@ class EnrollmentApplicationService(
         }catch (e: RuntimeException){
             seats.releaseSeat(courseId)
             throw e;
+        }
+    }
+
+    fun find(id: Long): Enrollment = enrollmentRepository.findById(id)
+        .orElseThrow { BusinessException(ErrorKind.NOT_FOUND, "Enrollment not found", "No enrollment with id $id") }
+
+    fun listOf(studentId: String, pageable: Pageable): Page<Enrollment>
+                = enrollmentRepository.findByStudentId(studentId, pageable)
+
+    fun cancel(id: Long){
+        val enrollment = find(id)
+        if(enrollment.cancel()){
+            enrollmentRepository.save(enrollment)
+            seats.releaseSeat(enrollment.courseId)
         }
     }
 }
