@@ -35,7 +35,8 @@ class EnrollmentController(private val service: EnrollmentApplicationService) {
     }
 
     @GetMapping("/{id}")
-    fun get(@PathVariable id: Long) = service.find(id).toResponse()
+    fun get(@RequestAttribute("auth") auth: AuthUser,@PathVariable id: Long) =
+        service.find(id, auth.student, auth.isAdmin).toResponse()
 
     @GetMapping
     fun list(
@@ -49,8 +50,8 @@ class EnrollmentController(private val service: EnrollmentApplicationService) {
     }
 
     @DeleteMapping("/{id}")
-    fun cancel(@PathVariable id: Long): ResponseEntity<Void> {
-        service.cancel(id)
+    fun cancel(@RequestAttribute("auth") auth: AuthUser,@PathVariable id: Long): ResponseEntity<Void> {
+        service.cancel(id, auth.student, auth.isAdmin)
         return ResponseEntity.noContent().build()
     }
 

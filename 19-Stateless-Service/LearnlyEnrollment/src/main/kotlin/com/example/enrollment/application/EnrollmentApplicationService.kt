@@ -22,32 +22,43 @@ class EnrollmentApplicationService(
         ?: throw BusinessException(ErrorKind.NOT_FOUND, "Course not found", "No seats are kept for course $courseId")
 
     fun enroll(studentId: String, courseId: String): Enrollment {
-        if(seats.findByCourseId(courseId) == null){
+        if (seats.findByCourseId(courseId) == null) {
             throw BusinessException(ErrorKind.NOT_FOUND, "Course not found", "No seats are kept for course $courseId")
         }
-        if(enrollmentRepository
-            .existsByStudentIdAndCourseIdAndStatus(studentId, courseId, EnrollmentStatus.CONFIRMED)) {
-            throw BusinessException(ErrorKind.CONFLICT, "Already enrolled", "$studentId is already enrolled in $courseId")
+        if (enrollmentRepository
+                .existsByStudentIdAndCourseIdAndStatus(studentId, courseId, EnrollmentStatus.CONFIRMED)
+        ) {
+            throw BusinessException(
+                ErrorKind.CONFLICT,
+                "Already enrolled",
+                "$studentId is already enrolled in $courseId"
+            )
         }
-        if(seats.takeSeat(courseId) == 0){
+        if (seats.takeSeat(courseId) == 0) {
             throw BusinessException(ErrorKind.CONFLICT, "No seats left", "Course $courseId is full")
         }
         try {
             return enrollmentRepository.save(Enrollment(studentId, courseId))
-        }catch (e: RuntimeException){
+        } catch (e: RuntimeException) {
             seats.releaseSeat(courseId)
             throw e;
         }
     }
 
-    fun find(id: Long): Enrollment = enrollmentRepository.findById(id)
-        .orElseThrow { BusinessException(ErrorKind.NOT_FOUND, "Enrollment not found", "No enrollment with id $id") }
+    fun find(id: Long, studentId: String, admin: Boolean): Enrollment {
+        val enrollment = enrollmentRepository.findById(id)
+            .orElseThrow { BusinessException(ErrorKind.NOT_FOUND, "Enrollment not found", "No enrollment with id $id") }
+        if(enrollment.studentId != studentId && !admin) {
+            throw BusinessException(ErrorKind.FORBIDDEN, "Forbidden", "This enrollment belongs to another student")
+        }
+        return enrollment
+    }
 
     fun listOf(studentId: String, pageable: Pageable): Page<Enrollment>
                 = enrollmentRepository.findByStudentId(studentId, pageable)
 
-    fun cancel(id: Long){
-        val enrollment = find(id)
+    fun cancel(id: Long, studentId: String, admin: Boolean){
+        val enrollment = find(id, studentId, admin)
         if(enrollment.cancel()){
             enrollmentRepository.save(enrollment)
             seats.releaseSeat(enrollment.courseId)
