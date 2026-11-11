@@ -16,8 +16,6 @@ class SeatBatchController(
 ) {
 
     @GetMapping("/{courseId}")
-    fun getSeats(@PathVariable("courseId") courseId: String): ResponseEntity<SeatBatchResponse> {
-        val batch = service.seatsOf(courseId) ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(batch.toResponse())
-    }
+    fun getSeats(@PathVariable("courseId") courseId: String): SeatBatchResponse =
+                                                service.seatsOf(courseId).toResponse()
 }
