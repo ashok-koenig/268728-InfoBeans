@@ -1,14 +1,40 @@
 package com.example.enrollment.application
 
+import com.example.enrollment.domain.Enrollment
+import com.example.enrollment.domain.EnrollmentRepository
+import com.example.enrollment.domain.EnrollmentStatus
 import com.example.enrollment.domain.SeatBatch
 import com.example.enrollment.domain.SeatBatchRepository
 import com.example.enrollment.exception.BusinessException
 import com.example.enrollment.exception.ErrorKind
+import org.springframework.boot.web.error.Error
 import org.springframework.stereotype.Service
 
 @Service
-class EnrollmentApplicationService(private val seats: SeatBatchRepository) {
+class EnrollmentApplicationService(
+    private val seats: SeatBatchRepository,
+    private val enrollmentRepository: EnrollmentRepository
+) {
 
     fun seatsOf(courseId: String): SeatBatch = seats.findByCourseId(courseId)
         ?: throw BusinessException(ErrorKind.NOT_FOUND, "Course not found", "No seats are kept for course $courseId")
+
+    fun enroll(studentId: String, courseId: String): Enrollment {
+        if(seats.findByCourseId(courseId) == null){
+            throw BusinessException(ErrorKind.NOT_FOUND, "Course not found", "No seats are kept for course $courseId")
+        }
+        if(enrollmentRepository
+            .existsByStudentIdAndCourseIdAndStatus(studentId, courseId, EnrollmentStatus.CONFIRMED)) {
+            throw BusinessException(ErrorKind.CONFLICT, "Already enrolled", "$studentId is already enrolled in $courseId")
+        }
+        if(seats.takeSeat(courseId) == 0){
+            throw BusinessException(ErrorKind.CONFLICT, "No seats left", "Course $courseId is full")
+        }
+        try {
+            return enrollmentRepository.save(Enrollment(studentId, courseId))
+        }catch (e: RuntimeException){
+            seats.releaseSeat(courseId)
+            throw e;
+        }
+    }
 }
