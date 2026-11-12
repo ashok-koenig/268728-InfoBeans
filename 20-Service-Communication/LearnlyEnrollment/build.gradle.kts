@@ -32,6 +32,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aspectj")
     implementation("io.github.resilience4j:resilience4j-spring-boot4:2.4.0")
 
+    implementation("org.springframework.boot:spring-boot-starter-artemis")
+
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")

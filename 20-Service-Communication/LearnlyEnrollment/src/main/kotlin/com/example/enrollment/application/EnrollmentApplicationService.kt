@@ -8,6 +8,9 @@ import com.example.enrollment.domain.SeatBatch
 import com.example.enrollment.domain.SeatBatchRepository
 import com.example.enrollment.exception.BusinessException
 import com.example.enrollment.exception.ErrorKind
+import com.example.enrollment.messaging.JmsPaymentRequests
+import com.example.enrollment.messaging.PaymentRequested
+import jakarta.transaction.Transactional
 import org.springframework.boot.web.error.Error
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -17,7 +20,8 @@ import org.springframework.stereotype.Service
 class EnrollmentApplicationService(
     private val seats: SeatBatchRepository,
     private val enrollmentRepository: EnrollmentRepository,
-    private val catalogue: CatalogueAdapter
+    private val catalogue: CatalogueAdapter,
+    private val payments: JmsPaymentRequests
 ) {
 
     fun seatsOf(courseId: String): SeatBatch = seats.findByCourseId(courseId)
@@ -50,11 +54,26 @@ class EnrollmentApplicationService(
             throw BusinessException(ErrorKind.CONFLICT, "No seats left", "Course $courseId is full")
         }
         try {
-            return enrollmentRepository.save(Enrollment(studentId, courseId))
+
+            val saved =  enrollmentRepository.save(Enrollment(studentId, courseId))
+            payments.ask(saved.id!!, studentId, courseId, course.price)
+            return saved
+
         } catch (e: RuntimeException) {
             seats.releaseSeat(courseId)
             throw e;
         }
+    }
+
+    @Transactional
+    fun paymentResult(enrollmentId: Long, paid: Boolean){
+        val enrollment = enrollmentRepository.findById(enrollmentId).orElse(null) ?: return
+        if (paid) {
+            enrollment.confirm()
+        }else if(enrollment.cancel()){
+            seats.releaseSeat(enrollment.courseId)
+        }
+        enrollmentRepository.save(enrollment)
     }
 
     fun find(id: Long, studentId: String, admin: Boolean): Enrollment {

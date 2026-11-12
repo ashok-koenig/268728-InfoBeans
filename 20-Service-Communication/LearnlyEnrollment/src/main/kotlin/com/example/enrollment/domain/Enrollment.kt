@@ -19,9 +19,17 @@ class Enrollment(
     var id: Long? = null
 
     @Enumerated(EnumType.STRING)
-    var status: EnrollmentStatus = EnrollmentStatus.CONFIRMED
+    var status: EnrollmentStatus = EnrollmentStatus.PENDING
 
     val createdAt: Instant = Instant.now()
+
+    fun confirm(): Boolean {
+        if (this.status != EnrollmentStatus.PENDING) {
+            return false
+        }
+        status = EnrollmentStatus.CONFIRMED
+        return true
+    }
 
     fun cancel(): Boolean {
         if(status == EnrollmentStatus.CANCELLED)
