@@ -1,0 +1,13 @@
+services:
+  artemis:
+    image: apache/activemq-artemis:2.44.0
+    container_name: learnly-artemis
+    ports:
+      - "61616:61616"   # messaging
+      - "8161:8161"     # web console: http://localhost:8161  (artemis / artemis)
+    environment:
+      ARTEMIS_USER: artemis
+      ARTEMIS_PASSWORD: artemis
+    volumes:
+      # three delivery attempts for every learnly.* queue, then the message goes to DLQ
+      - ./broker.xml:/var/lib/artemis-instance/etc-override/broker.xml
