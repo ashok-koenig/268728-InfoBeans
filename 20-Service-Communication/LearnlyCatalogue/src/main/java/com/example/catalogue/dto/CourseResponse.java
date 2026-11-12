@@ -5,10 +5,10 @@ import com.example.catalogue.entity.CourseStatus;
 
 import java.time.LocalDate;
 
-public record CourseResponse(Long id, String title, CourseStatus status, LocalDate launchDate, String category) {
+public record CourseResponse(Long id, String title, CourseStatus status, LocalDate launchDate, String category, Integer price) {
 
     public static CourseResponse from(Course course){
         return new CourseResponse(course.getId(), course.getTitle(),
-                course.getStatus(), course.getLaunchDate(), course.getCategory());
+                course.getStatus(), course.getLaunchDate(), course.getCategory(), course.getPrice());
     }
 }

@@ -22,14 +22,25 @@ public class Course {
 
     private String category;
 
+    private int price;
+
     public Course() {
     }
 
-    public Course(String title, CourseStatus status, LocalDate launchDate, String category) {
+    public Course(String title, CourseStatus status, LocalDate launchDate, String category, int price) {
         this.title = title;
         this.status = status;
         this.launchDate = launchDate;
         this.category = category;
+        this.price = price;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public Long getId() {

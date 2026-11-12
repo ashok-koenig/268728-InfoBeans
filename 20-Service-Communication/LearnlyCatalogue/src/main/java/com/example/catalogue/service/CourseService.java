@@ -45,7 +45,7 @@ public class CourseService {
     }
 
     public CourseResponse create(CourseRequest request){
-        Course course = new Course(request.title(), request.status(), request.launchDate(), request.category());
+        Course course = new Course(request.title(), request.status(), request.launchDate(), request.category(), request.price());
         return CourseResponse.from(repository.save(course));
     }
 
@@ -66,6 +66,7 @@ public class CourseService {
         course.setStatus(request.status());
         course.setLaunchDate(request.launchDate());
         course.setCategory(request.category());
+        course.setPrice(request.price());
         return CourseResponse.from(repository.save(course));
     }
 
