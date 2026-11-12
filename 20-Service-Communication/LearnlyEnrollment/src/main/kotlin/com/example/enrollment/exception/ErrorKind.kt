@@ -5,5 +5,6 @@ enum class ErrorKind {
     CONFLICT,
     BAD_REQUEST,
     UNAUTHORIZED,
-    FORBIDDEN
+    FORBIDDEN,
+    UNAVAILABLE
 }

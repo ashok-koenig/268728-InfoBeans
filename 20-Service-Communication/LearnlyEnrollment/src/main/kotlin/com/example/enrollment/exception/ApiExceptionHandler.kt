@@ -34,5 +34,6 @@ class ApiExceptionHandler {
         ErrorKind.BAD_REQUEST -> HttpStatus.BAD_REQUEST
         ErrorKind.UNAUTHORIZED -> HttpStatus.UNAUTHORIZED
         ErrorKind.FORBIDDEN -> HttpStatus.FORBIDDEN
+        ErrorKind.UNAVAILABLE -> HttpStatus.SERVICE_UNAVAILABLE
     }
 }
