@@ -1,5 +1,6 @@
 package com.example.enrollment.application
 
+import com.example.enrollment.adapter.CatalogueAdapter
 import com.example.enrollment.domain.Enrollment
 import com.example.enrollment.domain.EnrollmentRepository
 import com.example.enrollment.domain.EnrollmentStatus
@@ -15,13 +16,24 @@ import org.springframework.stereotype.Service
 @Service
 class EnrollmentApplicationService(
     private val seats: SeatBatchRepository,
-    private val enrollmentRepository: EnrollmentRepository
+    private val enrollmentRepository: EnrollmentRepository,
+    private val catalogue: CatalogueAdapter
 ) {
 
     fun seatsOf(courseId: String): SeatBatch = seats.findByCourseId(courseId)
         ?: throw BusinessException(ErrorKind.NOT_FOUND, "Course not found", "No seats are kept for course $courseId")
 
     fun enroll(studentId: String, courseId: String): Enrollment {
+
+        val course = catalogue.find(courseId)
+            ?: throw BusinessException(ErrorKind.NOT_FOUND,
+                "Course not found", "The catalogue has no course $courseId")
+
+        if(!course.open){
+            throw BusinessException(ErrorKind.CONFLICT, "Course not open",
+                "Course $courseId is not open for enrollment")
+        }
+
         if (seats.findByCourseId(courseId) == null) {
             throw BusinessException(ErrorKind.NOT_FOUND, "Course not found", "No seats are kept for course $courseId")
         }

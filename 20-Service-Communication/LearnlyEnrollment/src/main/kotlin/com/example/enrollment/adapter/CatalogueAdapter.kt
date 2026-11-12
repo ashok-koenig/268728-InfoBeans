@@ -2,11 +2,13 @@ package com.example.enrollment.adapter
 
 import com.example.enrollment.exception.BusinessException
 import com.example.enrollment.exception.ErrorKind
+import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestClientException
 
 data class CourseInfo(val courseId: String, val title: String, val price: Int, val open: Boolean)
 
+@Component
 class CatalogueAdapter(private val client: CatalogueClient) {
     fun find(courseId: String): CourseInfo? {
         return try {
