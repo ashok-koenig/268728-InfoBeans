@@ -29,7 +29,7 @@ class Product(
         joinColumns = [JoinColumn(name = "product_id")],
         inverseJoinColumns = [JoinColumn(name = "tag_id")]
     )
-    val tags: MutableList<Tag> = mutableListOf()
+    val tags: MutableSet<Tag> = mutableSetOf()
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Product) return false
