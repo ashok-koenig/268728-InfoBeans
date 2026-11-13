@@ -17,8 +17,11 @@ data class LineResponse(
     val sku: String,
     val quantity: Int,
     val unitPrice: BigDecimal,
+    val customer: String,
 )
 
-fun OrderLine.toResponse() = LineResponse(id.productId, product.sku, quantity, unitPrice)
+fun OrderLine.toResponse() =
+    LineResponse(id.productId, product.sku, quantity, unitPrice.amount, unitPrice.currency)
 
-fun Order.toResponse() = OrderResponse(id!!, customer, placedAt, lines.map { it.toResponse() })
+fun Order.toResponse() =
+    OrderResponse(id!!, customer, placedAt, lines.map { it.toResponse() })

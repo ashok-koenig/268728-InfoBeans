@@ -21,5 +21,8 @@ class OrderLine(
 
     var quantity: Int,
 
-    var unitPrice: BigDecimal,
+    @Embedded
+    @AttributeOverride(name = "amount", column = Column(name = "unit_price_amount"))
+    @AttributeOverride(name = "currency", column = Column(name = "unit_price_currency"))
+    var unitPrice: Money,
 )
