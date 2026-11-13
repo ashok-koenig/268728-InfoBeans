@@ -1,5 +1,8 @@
 package com.example.shopkart.entity
 
+import jakarta.persistence.AttributeOverride
+import jakarta.persistence.Column
+import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -16,7 +19,11 @@ class Product(
     var sku: String,
     var name: String,
     var category: String,
-    var price: BigDecimal,
+
+    @Embedded
+    @AttributeOverride(name = "amount", column = Column(name = "price_amount"))
+    @AttributeOverride(name = "currency", column = Column(name = "price_currency"))
+    var price: Money,
     var stock: Int
 ) {
     @Id
