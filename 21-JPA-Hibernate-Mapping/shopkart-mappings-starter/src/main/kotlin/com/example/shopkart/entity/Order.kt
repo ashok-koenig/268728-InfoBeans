@@ -14,7 +14,7 @@ class Order(
 
     val placedAt: LocalDateTime = LocalDateTime.now()
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = [(CascadeType.ALL)], orphanRemoval = true)
     val lines: MutableList<OrderLine> = mutableListOf()
 
     fun addLine(line: OrderLine) {

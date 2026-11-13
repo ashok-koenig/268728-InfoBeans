@@ -4,6 +4,7 @@ import com.example.shopkart.dto.OrderRequest
 import com.example.shopkart.dto.OrderResponse
 import com.example.shopkart.service.OrderService
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,4 +25,8 @@ class OrderController(
 
     @GetMapping("/{id}")
     fun get(@PathVariable id: Long): OrderResponse = service.get(id)
+
+    @DeleteMapping("/{orderId}/lines/{lineId}")
+    fun removeLine(@PathVariable orderId: Long, @PathVariable lineId: Long): OrderResponse =
+        service.removeLine(orderId, lineId)
 }
