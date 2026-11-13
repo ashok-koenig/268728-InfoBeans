@@ -9,7 +9,9 @@ data class ProductResponse(
     val name: String,
     val category: String,
     val price: BigDecimal,
-    val stock: Int
+    val stock: Int,
+    val tags: List<String>,
 )
 
-fun Product.toResponse() = ProductResponse(id!!, sku, name, category, price, stock)
+fun Product.toResponse() =
+    ProductResponse(id!!, sku, name, category, price, stock, tags.map{it.name}.sorted())
