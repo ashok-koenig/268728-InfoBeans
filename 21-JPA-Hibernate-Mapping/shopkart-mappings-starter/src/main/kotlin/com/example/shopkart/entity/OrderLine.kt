@@ -1,19 +1,25 @@
 package com.example.shopkart.entity
 
 import jakarta.persistence.*
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "order_line")
 class OrderLine(
-    var productName: String,
+    @EmbeddedId
+    val id: OrderLineId,
 
-    var quantity: Int,
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
-
+    @MapsId("orderId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    var order: Order? = null
-}
+    val order: Order,
+
+    @MapsId("productId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    val product: Product,
+
+    var quantity: Int,
+
+    var unitPrice: BigDecimal,
+)
