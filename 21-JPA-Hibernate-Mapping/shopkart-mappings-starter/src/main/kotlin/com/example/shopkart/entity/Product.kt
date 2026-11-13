@@ -19,6 +19,7 @@ import java.math.BigDecimal
     name = "product",
     indexes = [
         Index(name = "idx_product_category", columnList = "category"),
+        Index(name = "idx_product_category_price", columnList = "category, price_amount"),
     ]
 )
 class Product(
