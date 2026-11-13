@@ -2,6 +2,7 @@ package com.example.shopkart.dto
 
 import com.example.shopkart.entity.Order
 import com.example.shopkart.entity.OrderLine
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 data class OrderResponse(
@@ -12,11 +13,12 @@ data class OrderResponse(
 )
 
 data class LineResponse(
-    val lineId: Long?,
-    val productName: String,
+    val productId: Long,
+    val sku: String,
     val quantity: Int,
+    val unitPrice: BigDecimal,
 )
 
-fun OrderLine.toResponse() = LineResponse(id, productName, quantity)
+fun OrderLine.toResponse() = LineResponse(id.productId, product.sku, quantity, unitPrice)
 
 fun Order.toResponse() = OrderResponse(id!!, customer, placedAt, lines.map { it.toResponse() })

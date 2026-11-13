@@ -1,5 +1,6 @@
 package com.example.shopkart.controller
 
+import com.example.shopkart.dto.LineRequest
 import com.example.shopkart.dto.OrderRequest
 import com.example.shopkart.dto.OrderResponse
 import com.example.shopkart.service.OrderService
@@ -26,7 +27,11 @@ class OrderController(
     @GetMapping("/{id}")
     fun get(@PathVariable id: Long): OrderResponse = service.get(id)
 
-    @DeleteMapping("/{orderId}/lines/{lineId}")
-    fun removeLine(@PathVariable orderId: Long, @PathVariable lineId: Long): OrderResponse =
-        service.removeLine(orderId, lineId)
+    @PostMapping("/{id}/lines")
+    fun addLine(@PathVariable id: Long, @RequestBody request: LineRequest): OrderResponse =
+        service.addLine(id, request)
+
+    @DeleteMapping("/{orderId}/lines/{productId}")
+    fun removeLine(@PathVariable orderId: Long, @PathVariable productId: Long): OrderResponse =
+        service.removeLine(orderId, productId)
 }

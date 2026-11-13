@@ -6,6 +6,6 @@ data class OrderRequest(
 )
 
 data class LineRequest(
-    val productName: String,
+    val productId: Long,
     val quantity: Int,
 )

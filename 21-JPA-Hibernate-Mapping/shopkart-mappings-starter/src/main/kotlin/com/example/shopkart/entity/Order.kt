@@ -19,10 +19,8 @@ class Order(
 
     fun addLine(line: OrderLine) {
         lines.add(line)
-        line.order = this
     }
     fun removeLine(line: OrderLine) {
         lines.remove(line)
-        line.order = null
     }
 }
