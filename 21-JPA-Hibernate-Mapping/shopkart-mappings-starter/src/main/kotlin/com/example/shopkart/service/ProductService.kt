@@ -2,9 +2,11 @@ package com.example.shopkart.service
 
 import com.example.shopkart.dto.ProductRequest
 import com.example.shopkart.dto.ProductResponse
+import com.example.shopkart.dto.ProductSummaryResponse
 import com.example.shopkart.dto.TagRequest
 import com.example.shopkart.dto.toEntity
 import com.example.shopkart.dto.toResponse
+import com.example.shopkart.dto.toSummary
 import com.example.shopkart.entity.Product
 import com.example.shopkart.entity.Tag
 import com.example.shopkart.exception.BusinessException
@@ -12,7 +14,9 @@ import com.example.shopkart.exception.ErrorKind
 import com.example.shopkart.repository.ProductRepository
 import com.example.shopkart.repository.TagRepository
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 @Service
 class ProductService(
@@ -38,4 +42,11 @@ class ProductService(
 
     private fun find(id: Long): Product =
         productRepository.findById(id).orElseThrow { BusinessException(ErrorKind.NOT_FOUND, "product $id not found") }
+
+    fun search(category: String, maxPrice: BigDecimal): List<ProductSummaryResponse> =
+        productRepository.findByCategoryAndPriceAmountLessThanEqual(
+            category,
+            maxPrice,
+            PageRequest.of(0,20)
+        ).map { it.toSummary() }
 }
