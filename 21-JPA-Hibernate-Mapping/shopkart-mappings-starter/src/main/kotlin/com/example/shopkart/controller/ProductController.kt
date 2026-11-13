@@ -2,6 +2,7 @@ package com.example.shopkart.controller
 
 import com.example.shopkart.dto.ProductRequest
 import com.example.shopkart.dto.ProductResponse
+import com.example.shopkart.dto.TagRequest
 import com.example.shopkart.entity.Product
 import com.example.shopkart.service.ProductService
 import org.springframework.http.HttpStatus
@@ -29,4 +30,8 @@ class ProductController(
 
     @GetMapping("/{id}")
     fun get(@PathVariable id: Long): ProductResponse = productService.get(id)
+
+    @PostMapping("/{id}/tags")
+    fun addTags(@PathVariable id: Long, @RequestBody request: TagRequest): ProductResponse =
+        productService.addTag(id, request)
 }
