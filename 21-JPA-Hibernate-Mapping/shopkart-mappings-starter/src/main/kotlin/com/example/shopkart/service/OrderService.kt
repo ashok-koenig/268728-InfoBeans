@@ -59,4 +59,6 @@ class OrderService(
 
     private fun findProduct(id: Long): Product =
         products.findById(id).orElseThrow { BusinessException(ErrorKind.NOT_FOUND, "Product $id not found") }
+
+    fun list(): List<OrderResponse> = orders.findAll().map { it.toResponse() }
 }

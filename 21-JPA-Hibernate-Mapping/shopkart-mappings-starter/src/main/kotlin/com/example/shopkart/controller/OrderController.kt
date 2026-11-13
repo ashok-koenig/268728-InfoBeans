@@ -5,6 +5,7 @@ import com.example.shopkart.dto.OrderRequest
 import com.example.shopkart.dto.OrderResponse
 import com.example.shopkart.service.OrderService
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -34,4 +35,7 @@ class OrderController(
     @DeleteMapping("/{orderId}/lines/{productId}")
     fun removeLine(@PathVariable orderId: Long, @PathVariable productId: Long): OrderResponse =
         service.removeLine(orderId, productId)
+
+    @GetMapping
+    fun list(): List<OrderResponse> = service.list()
 }

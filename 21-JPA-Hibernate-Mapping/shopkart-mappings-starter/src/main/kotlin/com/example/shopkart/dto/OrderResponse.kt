@@ -2,6 +2,7 @@ package com.example.shopkart.dto
 
 import com.example.shopkart.entity.Order
 import com.example.shopkart.entity.OrderLine
+import org.hibernate.validator.constraints.Currency
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -17,7 +18,7 @@ data class LineResponse(
     val sku: String,
     val quantity: Int,
     val unitPrice: BigDecimal,
-    val customer: String,
+    val currency : String,
 )
 
 fun OrderLine.toResponse() =
